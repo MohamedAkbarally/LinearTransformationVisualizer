@@ -74,7 +74,13 @@ export default function SideBar({
     <>
       <NavBar />
       <Container style={{ width: 355 }}>
-        <div style={{ overflow: 'scroll' }}>
+        <div
+          style={{
+            height: 'calc(100vh - 64px)',
+            width: '100%',
+            overflow: 'scroll',
+          }}
+        >
           <Typography variant="h6" style={{ marginTop: 16 }} gutterBottom>
             Transformation Matrix
           </Typography>
@@ -190,7 +196,7 @@ export default function SideBar({
             }
             label="Auto Rotate"
           />
-          <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <div style={{ textAlign: 'center', marginTop: 32, marginBottom: 16 }}>
             <Typography variant="subtitle2">Inspired by 3Blue1Brown</Typography>
             <Typography variant="subtitle2">
               mohamed.akbarally@gmail.com
