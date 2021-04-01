@@ -223,6 +223,7 @@ class App extends Component {
     cubeClone = cube.clone();
 
     determinantDiv.textContent = '1.00';
+    determinantDiv.style.color = '#00ff00';
     determinantLabel = new CSS2DObject(determinantDiv);
     determinantLabel.element.innerText = '1.00';
 

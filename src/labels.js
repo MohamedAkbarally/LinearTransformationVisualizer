@@ -26,6 +26,5 @@ vectorDiv.style.fontWeight = 'bold';
 
 export const determinantDiv = document.createElement('div');
 determinantDiv.className = 'label';
-determinantDiv.style.color = '#00ff00';
 determinantDiv.style.marginTop = '0em';
 determinantDiv.style.fontWeight = 'bold';
