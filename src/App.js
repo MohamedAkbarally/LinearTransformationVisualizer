@@ -406,12 +406,6 @@ class App extends Component {
           .clone()
           .applyMatrix4(animationMatrix);
 
-        //change color to red for negative determinant
-        if (animationMatrix.determinant() < 0) {
-          cube.material.color.setHex(0xff0000);
-          cube.children[1].element.style.color = '#ff0000';
-        }
-
         //adjust axes
         axisY.geometry = axisYO.geometry.clone().applyMatrix4(animationMatrix);
         axisX.geometry = axisXO.geometry.clone().applyMatrix4(animationMatrix);
@@ -446,6 +440,12 @@ class App extends Component {
 
         //re-shape cube
         if (this.state.cube) {
+          //change color to red for negative determinant
+          if (animationMatrix.determinant() < 0) {
+            cube.material.color.setHex(0xff0000);
+            cube.children[1].element.style.color = '#ff0000';
+          }
+
           cube.geometry = cubeClone.geometry
             .clone()
             .applyMatrix4(animationMatrix);
