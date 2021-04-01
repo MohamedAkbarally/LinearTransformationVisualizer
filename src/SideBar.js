@@ -74,7 +74,7 @@ export default function SideBar({
     <>
       <NavBar />
       <Container style={{ width: 355 }}>
-        <div style={{ height: 'calc(100vh - 110px)', overflow: 'scroll' }}>
+        <div style={{ overflow: 'scroll' }}>
           <Typography variant="h6" style={{ marginTop: 16 }} gutterBottom>
             Transformation Matrix
           </Typography>
@@ -176,20 +176,21 @@ export default function SideBar({
               Reset
             </Button>
           )}
+          <Divider style={{ marginTop: 16, marginBottom: 8 }} />
+          <FormControlLabel
+            style={{ marginLeft: 0 }}
+            fullWidth
+            control={
+              <Switch
+                checked={auto}
+                onChange={toggleAuto}
+                name="checkedB"
+                color="primary"
+              />
+            }
+            label="Auto Rotate"
+          />
         </div>
-
-        <FormControlLabel
-          fullWidth
-          control={
-            <Switch
-              checked={auto}
-              onChange={toggleAuto}
-              name="checkedB"
-              color="primary"
-            />
-          }
-          label="Auto Rotate"
-        />
       </Container>
     </>
   );
