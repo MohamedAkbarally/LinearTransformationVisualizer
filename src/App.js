@@ -224,6 +224,8 @@ class App extends Component {
 
     determinantDiv.textContent = '1.00';
     determinantLabel = new CSS2DObject(determinantDiv);
+    determinantLabel.element.innerText = '1.00';
+
     determinantLabel.position.set(0.5, 0.5, 0.5);
 
     //add Mesh to scene
