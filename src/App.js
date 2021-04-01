@@ -222,6 +222,7 @@ class App extends Component {
     cube.add(wireframe);
     cubeClone = cube.clone();
 
+    determinantDiv.textContent = '1.00';
     determinantLabel = new CSS2DObject(determinantDiv);
     determinantLabel.position.set(0.5, 0.5, 0.5);
 
