@@ -190,6 +190,12 @@ export default function SideBar({
             }
             label="Auto Rotate"
           />
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <Typography variant="subtitle2">Inspired by 3Blue1Brown</Typography>
+            <Typography variant="subtitle2">
+              mohamed.akbarally@gmail.com
+            </Typography>
+          </div>
         </div>
       </Container>
     </>
