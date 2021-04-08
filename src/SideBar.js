@@ -74,7 +74,7 @@ export default function SideBar({
 
   return (
     <div>
-      <Container style={{ width: 355 }}>
+      <Container style={{ width: 400 }}>
         <div
           style={{
             height: 'calc(100vh - 64px)',

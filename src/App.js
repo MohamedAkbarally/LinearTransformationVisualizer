@@ -365,22 +365,22 @@ class App extends Component {
     window.addEventListener('resize', onWindowResize, false);
 
     function onWindowResize() {
-      camera.aspect = (window.innerWidth - 355) / (window.innerHeight - 64);
+      camera.aspect = (window.innerWidth - 400) / (window.innerHeight - 64);
       camera.updateProjectionMatrix();
 
-      renderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
-      labelRenderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
+      renderer.setSize(window.innerWidth - 400, window.innerHeight - 64);
+      labelRenderer.setSize(window.innerWidth - 400, window.innerHeight - 64);
     }
 
     //WebGL Renderer
     var renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
+    renderer.setSize(window.innerWidth - 400, window.innerHeight - 64);
 
     this.mount.appendChild(renderer.domElement);
 
     //Label Renderer
     let labelRenderer = new CSS2DRenderer();
-    labelRenderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
+    labelRenderer.setSize(window.innerWidth - 400, window.innerHeight - 64);
     labelRenderer.domElement.style.position = 'absolute';
     labelRenderer.domElement.style.top = '64px';
     labelRenderer.domElement.style.pointerEvents = 'none';
@@ -391,7 +391,7 @@ class App extends Component {
     scene.rotation.z = Math.PI;
     camera = new THREE.PerspectiveCamera(
       1000,
-      (window.innerWidth - 355) / (window.innerHeight - 64),
+      (window.innerWidth - 400) / (window.innerHeight - 64),
       0.8,
       1000
     );
