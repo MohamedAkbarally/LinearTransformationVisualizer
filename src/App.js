@@ -12,17 +12,12 @@ import {
   gridPoints,
   gridPointsO,
 } from './grids';
-import {
-  axisXDiv,
-  axisYDiv,
-  axisZDiv,
-  determinantDiv,
-  vectorDiv,
-} from './labels';
+import { axisXDiv, axisYDiv, axisZDiv, determinantDiv } from './labels';
 
 import Box from '@material-ui/core/Box';
 import { COLOR_LIST } from './colorList';
 import { CssBaseline } from '@material-ui/core';
+import NavBar from './NavBar';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import ReactDOM from 'react-dom';
 import SideBar from './SideBar';
@@ -36,6 +31,7 @@ var t = 0;
 
 var standardGrid,
   transformedGrid,
+  transformedGrid0,
   axisY,
   axisZ,
   axisX,
@@ -46,7 +42,10 @@ var standardGrid,
   cubeClone,
   determinantLabel,
   stepElements,
+  camera,
   animationMatrix;
+
+var inc = 50;
 
 const theme = createMuiTheme({
   palette: {
@@ -74,13 +73,13 @@ const createVector = function (vector, n) {
 
   var tip = new THREE.Mesh(
     geomTip,
-    new THREE.MeshPhongMaterial({
+    new THREE.MeshStandardMaterial({
       color: COLOR_LIST[n],
     })
   );
   var cylinder = new THREE.Mesh(
     geomCylinder,
-    new THREE.MeshPhongMaterial({
+    new THREE.MeshStandardMaterial({
       color: COLOR_LIST[n],
     })
   );
@@ -92,7 +91,12 @@ const createVector = function (vector, n) {
   vectorGroup.add(cylinder);
   vectorGroup.add(tip);
   vectorGroup.quaternion.setFromUnitVectors(axis, vector.clone().normalize());
-
+  const vectorDiv = document.createElement('div');
+  vectorDiv.style.textShadow =
+    '-2px 0 #1f1f1f, 0 2px #1f1f1f, 2px 0 #1f1f1f, 0 -2px #1f1f1f';
+  vectorDiv.className = 'label';
+  vectorDiv.style.marginTop = '-1.5em';
+  vectorDiv.style.fontWeight = 'bold';
   vectorDiv.textContent = vectorToString(vector);
   vectorDiv.style.color = COLOR_LIST[n];
   const vectorLabel = new CSS2DObject(vectorDiv);
@@ -128,7 +132,7 @@ class App extends Component {
       vectors: [],
       transformationMatrix: transformationMatrix,
       play: 'INIT',
-      auto: true,
+      auto: false,
       cube: false,
     };
   }
@@ -160,26 +164,39 @@ class App extends Component {
     scene.remove(standardGrid);
     scene.remove(transformedGrid);
 
-    //Create new lines
-    standardGrid = new THREE.LineSegments(
-      new THREE.BufferGeometry().setFromPoints(gridPointsO),
-      new THREE.LineBasicMaterial({ color: 0x202436 })
-    );
     transformedGrid = new THREE.LineSegments(
       new THREE.BufferGeometry().setFromPoints(gridPoints),
-      new THREE.LineBasicMaterial({ color: 0x5c5c5c })
+      new THREE.LineBasicMaterial({
+        color: 0x696b00,
+        depthTest: false,
+      })
+    );
+
+    standardGrid = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(gridPointsO),
+      new THREE.LineBasicMaterial({
+        color: 0x6e6e6e,
+        depthTest: false,
+      })
+    );
+
+    //Create new lines
+
+    transformedGrid0 = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(gridPoints),
+      new THREE.LineBasicMaterial({ color: 0xe0e0e0, depthTest: false })
     );
     axisY = new THREE.Line(
       new THREE.BufferGeometry().setFromPoints(axisPointsY),
-      new THREE.LineBasicMaterial({ color: 0x323066 })
+      new THREE.LineBasicMaterial({ color: 0xe91e63, depthTest: false })
     );
     axisX = new THREE.Line(
       new THREE.BufferGeometry().setFromPoints(axisPointsX),
-      new THREE.LineBasicMaterial({ color: 0x66303d })
+      new THREE.LineBasicMaterial({ color: 0x3f51b5, depthTest: false })
     );
     axisZ = new THREE.Line(
       new THREE.BufferGeometry().setFromPoints(axisPointsZ),
-      new THREE.LineBasicMaterial({ color: 0x306636 })
+      new THREE.LineBasicMaterial({ color: 0x4caf50, depthTest: false })
     );
 
     //Set Axis Labels
@@ -212,7 +229,7 @@ class App extends Component {
     var wireframeGeometry = new THREE.EdgesGeometry(cube.geometry);
     var wireframeMaterial = new THREE.LineBasicMaterial({
       color: 0x000000,
-      linewidth: 4,
+      linewidth: 1,
     });
     var wireframe = new THREE.LineSegments(
       wireframeGeometry,
@@ -270,6 +287,9 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     //if vectors changed
     if (prevState.vectors !== this.state.vectors) {
+      if (this.state.play !== 'INIT') {
+        this.reset();
+      }
       this.initVectors();
     }
 
@@ -279,7 +299,11 @@ class App extends Component {
         animationMatrix = new THREE.Matrix4();
         const transformationMatrix = this.state.transformationMatrix;
         stepElements = animationMatrix.elements.map(function (item, index) {
-          return (transformationMatrix.elements[index] - item) / 100;
+          inc = 50 * Math.round(transformationMatrix.getMaxScaleOnAxis());
+          if (transformationMatrix.getMaxScaleOnAxis() < 1) {
+            inc = 50 * Math.round(1 / transformationMatrix.getMaxScaleOnAxis());
+          }
+          return (transformationMatrix.elements[index] - item) / inc;
         });
       }
     }
@@ -298,13 +322,18 @@ class App extends Component {
 
   //reset Animation
   reset = () => {
+    camera.position.y = -2;
+    camera.position.z = 8;
+    camera.position.x = -8;
+    camera.lookAt(0, 0, 0);
     const transformationMatrix = this.state.transformationMatrix;
     this.initVectors();
     this.initGrid();
     this.setState({ play: 'INIT' });
+    inc = 50;
     animationMatrix = new THREE.Matrix4();
     stepElements = animationMatrix.elements.map(function (item, index) {
-      return (transformationMatrix.elements[index] - item) / 100;
+      return (transformationMatrix.elements[index] - item) / inc;
     });
     t = 0;
   };
@@ -321,33 +350,33 @@ class App extends Component {
     window.addEventListener('resize', onWindowResize, false);
 
     function onWindowResize() {
-      camera.aspect = (window.innerWidth - 355) / window.innerHeight;
+      camera.aspect = (window.innerWidth - 355) / (window.innerHeight - 64);
       camera.updateProjectionMatrix();
 
-      renderer.setSize(window.innerWidth - 355, window.innerHeight);
-      labelRenderer.setSize(window.innerWidth - 355, window.innerHeight);
+      renderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
+      labelRenderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
     }
 
     //WebGL Renderer
     var renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth - 355, window.innerHeight);
+    renderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
 
     this.mount.appendChild(renderer.domElement);
 
     //Label Renderer
     let labelRenderer = new CSS2DRenderer();
-    labelRenderer.setSize(window.innerWidth - 355, window.innerHeight);
+    labelRenderer.setSize(window.innerWidth - 355, window.innerHeight - 64);
     labelRenderer.domElement.style.position = 'absolute';
-    labelRenderer.domElement.style.top = '0px';
+    labelRenderer.domElement.style.top = '64px';
     labelRenderer.domElement.style.pointerEvents = 'none';
     this.mount.appendChild(labelRenderer.domElement);
 
     //Scene intialization
-    scene.background = new THREE.Color(0x050505);
+    scene.background = new THREE.Color(0x212121);
     scene.rotation.z = Math.PI;
-    var camera = new THREE.PerspectiveCamera(
+    camera = new THREE.PerspectiveCamera(
       1000,
-      (window.innerWidth - 355) / window.innerHeight,
+      (window.innerWidth - 355) / (window.innerHeight - 64),
       0.8,
       1000
     );
@@ -358,12 +387,17 @@ class App extends Component {
     this.initGrid();
 
     //Lighting
-    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+    const light2 = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.4);
+    const light = new THREE.AmbientLight(0x505050); // soft white light
+
     scene.add(light);
+    scene.add(light2);
 
     //Camera postion and movement
     camera.position.y = -2;
-    camera.position.z = 15;
+    camera.position.z = 8;
+    camera.position.x = -8;
+
     controls.update();
 
     //Rotation animation
@@ -379,15 +413,39 @@ class App extends Component {
 
     animationMatrix = new THREE.Matrix4();
     stepElements = animationMatrix.elements.map(function (item, index) {
-      return (transformationMatrix.elements[index] - item) / 100;
+      return (transformationMatrix.elements[index] - item) / inc;
     });
 
     var animate = () => {
       if (this.state.auto) {
         checkRotation();
       }
+
+      if (t === inc) {
+        animationMatrix = new THREE.Matrix4();
+      }
+
       if (
-        t <= 100 &&
+        t <= 2 * inc &&
+        t >= inc &&
+        this.state.play !== 'INIT' &&
+        this.state.play !== 'ERROR'
+      ) {
+        animationMatrix.elements = animationMatrix.elements.map(function (
+          item,
+          index
+        ) {
+          return stepElements[index] + item;
+        });
+        camera.position.x = -8 * animationMatrix.getMaxScaleOnAxis();
+        camera.position.y = -2 * animationMatrix.getMaxScaleOnAxis();
+        camera.position.z = 8 * animationMatrix.getMaxScaleOnAxis();
+        camera.lookAt(0, 0, 0);
+        t++;
+      }
+
+      if (
+        t <= inc - 1 &&
         this.state.play !== 'INIT' &&
         this.state.play !== 'ERROR'
       ) {
@@ -398,12 +456,14 @@ class App extends Component {
           return stepElements[index] + item;
         });
 
+        standardGrid.visible = true;
+
         var i;
         for (i = 0; i < vectorList.length; i++) {
           transformVector(vectorList[i], animationMatrix);
         }
 
-        transformedGrid.geometry = standardGrid.geometry
+        transformedGrid.geometry = transformedGrid0.geometry
           .clone()
           .applyMatrix4(animationMatrix);
 
@@ -447,6 +507,8 @@ class App extends Component {
             cube.children[1].element.style.color = '#ff0000';
           }
 
+          console.log(animationMatrix.determinant());
+
           cube.geometry = cubeClone.geometry
             .clone()
             .applyMatrix4(animationMatrix);
@@ -466,7 +528,7 @@ class App extends Component {
       }
 
       //set animation to done
-      if (t === 100) {
+      if (t === 2 * inc) {
         t++;
         this.setState({ play: 'DONE' });
       }
@@ -482,31 +544,35 @@ class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Box display="flex">
-          <Box>
-            <SideBar
-              reset={this.reset}
-              auto={this.state.auto}
-              toggleAuto={() => {
-                this.setState({ auto: !this.state.auto });
-              }}
-              cube={this.state.cube}
-              toggleCube={() => {
-                this.setState({ cube: !this.state.cube });
-              }}
-              vectors={this.state.vectors}
-              setPlay={this.setPlay}
-              play={this.state.play}
-              transformationMatrix={this.state.transformationMatrix}
-              updateVectorMesh={this.updateVectors}
-              updateMatrixParent={this.updateMatrix}
-            />
+        <NavBar />
+        <div>
+          <CssBaseline />
+
+          <Box display="flex">
+            <Box>
+              <SideBar
+                reset={this.reset}
+                auto={this.state.auto}
+                toggleAuto={() => {
+                  this.setState({ auto: !this.state.auto });
+                }}
+                cube={this.state.cube}
+                toggleCube={() => {
+                  this.setState({ cube: !this.state.cube });
+                }}
+                vectors={this.state.vectors}
+                setPlay={this.setPlay}
+                play={this.state.play}
+                transformationMatrix={this.state.transformationMatrix}
+                updateVectorMesh={this.updateVectors}
+                updateMatrixParent={this.updateMatrix}
+              />
+            </Box>
+            <Box flexGrow={1}>
+              <div ref={(ref) => (this.mount = ref)} />
+            </Box>
           </Box>
-          <Box flexGrow={1}>
-            <div ref={(ref) => (this.mount = ref)} />
-          </Box>
-        </Box>
+        </div>
       </ThemeProvider>
     );
   }

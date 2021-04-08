@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   Divider,
@@ -9,6 +10,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import NavBar from './NavBar';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import React from 'react';
@@ -71,8 +73,7 @@ export default function SideBar({
   };
 
   return (
-    <>
-      <NavBar />
+    <div>
       <Container style={{ width: 355 }}>
         <div
           style={{
@@ -196,14 +197,18 @@ export default function SideBar({
             }
             label="Auto Rotate"
           />
-          <div style={{ textAlign: 'center', marginTop: 32, marginBottom: 16 }}>
-            <Typography variant="subtitle2">Inspired by 3Blue1Brown</Typography>
-            <Typography variant="subtitle2">
+          <div style={{ textAlign: 'center', marginTop: 48, marginBottom: 16 }}>
+            <Button
+              color="defualt"
+              href="mailto:mohamed.akbarally@gmail.com"
+              size="small"
+              startIcon={<MailOutlineIcon />}
+            >
               mohamed.akbarally@gmail.com
-            </Typography>
+            </Button>
           </div>
         </div>
       </Container>
-    </>
+    </div>
   );
 }
