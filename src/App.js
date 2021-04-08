@@ -45,7 +45,7 @@ var standardGrid,
   camera,
   animationMatrix;
 
-var inc = 50;
+var inc = 100;
 
 const theme = createMuiTheme({
   palette: {
@@ -64,6 +64,20 @@ const vectorToString = function (vector) {
     ')'
   );
 };
+
+function removeA(arr) {
+  var what,
+    a = arguments,
+    L = a.length,
+    ax;
+  while (L > 1 && arr.length) {
+    what = a[--L];
+    while ((ax = arr.indexOf(what)) !== -1) {
+      arr.splice(ax, 1);
+    }
+  }
+  return arr;
+}
 
 const createVector = function (vector, n) {
   const geomCylinder = new THREE.CylinderGeometry(0.08, 0.08, 1, 16, 1);
@@ -286,6 +300,8 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     //if vectors changed
+    console.log('vector changed');
+
     if (prevState.vectors !== this.state.vectors) {
       if (this.state.play !== 'INIT') {
         this.reset();
@@ -295,14 +311,14 @@ class App extends Component {
 
     //if matrix changed
     if (prevState.transformationMatrix !== this.state.transformationMatrix) {
+      console.log('matrix changed');
+      if (this.state.play !== 'INIT') {
+        this.reset();
+      }
       if (!this.state.transformationMatrix.elements.includes('')) {
         animationMatrix = new THREE.Matrix4();
         const transformationMatrix = this.state.transformationMatrix;
         stepElements = animationMatrix.elements.map(function (item, index) {
-          inc = 50 * Math.round(transformationMatrix.getMaxScaleOnAxis());
-          if (transformationMatrix.getMaxScaleOnAxis() < 1) {
-            inc = 50 * Math.round(1 / transformationMatrix.getMaxScaleOnAxis());
-          }
           return (transformationMatrix.elements[index] - item) / inc;
         });
       }
@@ -330,7 +346,6 @@ class App extends Component {
     this.initVectors();
     this.initGrid();
     this.setState({ play: 'INIT' });
-    inc = 50;
     animationMatrix = new THREE.Matrix4();
     stepElements = animationMatrix.elements.map(function (item, index) {
       return (transformationMatrix.elements[index] - item) / inc;
