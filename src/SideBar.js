@@ -75,7 +75,12 @@ export default function SideBar({
   return (
     <div>
       <Container
-        style={{ width: 400, overflowY: 'scroll', overflowX: 'hidden' }}
+        style={{
+          maxWidth: 400,
+          maxHeight: 'calc(100vh - 64px)',
+          overflowY: 'scroll',
+          overflowX: 'hidden',
+        }}
       >
         <div
           style={{

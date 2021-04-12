@@ -452,9 +452,16 @@ class App extends Component {
         ) {
           return stepElements[index] + item;
         });
-        camera.position.x = -8 * animationMatrix.getMaxScaleOnAxis();
-        camera.position.y = -2 * animationMatrix.getMaxScaleOnAxis();
-        camera.position.z = 8 * animationMatrix.getMaxScaleOnAxis();
+
+        var direction = new THREE.Vector3();
+        camera.getWorldDirection(direction);
+        console.log(this.state.transformationMatrix.getMaxScaleOnAxis(), inc);
+        camera.position.add(
+          direction.multiplyScalar(
+            -6 * (this.state.transformationMatrix.getMaxScaleOnAxis() / inc)
+          )
+        );
+
         camera.lookAt(0, 0, 0);
         t++;
       }
