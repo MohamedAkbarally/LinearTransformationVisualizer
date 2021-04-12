@@ -74,12 +74,13 @@ export default function SideBar({
 
   return (
     <div>
-      <Container style={{ width: 400 }}>
+      <Container
+        style={{ width: 400, overflowY: 'scroll', overflowX: 'hidden' }}
+      >
         <div
           style={{
             height: 'calc(100vh - 64px)',
             width: '100%',
-            overflow: 'scroll',
           }}
         >
           <Typography variant="h6" style={{ marginTop: 16 }} gutterBottom>

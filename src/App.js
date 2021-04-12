@@ -298,6 +298,23 @@ class App extends Component {
     }
   };
 
+  //reset Animation
+  reset = () => {
+    camera.position.y = -2;
+    camera.position.z = 8;
+    camera.position.x = -8;
+    camera.lookAt(0, 0, 0);
+    const transformationMatrix = this.state.transformationMatrix;
+    this.initVectors();
+    this.initGrid();
+    this.setState({ play: 'INIT' });
+    animationMatrix = new THREE.Matrix4();
+    stepElements = animationMatrix.elements.map(function (item, index) {
+      return (transformationMatrix.elements[index] - item) / inc;
+    });
+    t = 0;
+  };
+
   componentDidUpdate(prevProps, prevState) {
     //if vectors changed
     console.log('vector changed');
@@ -335,23 +352,6 @@ class App extends Component {
       }
     }
   }
-
-  //reset Animation
-  reset = () => {
-    camera.position.y = -2;
-    camera.position.z = 8;
-    camera.position.x = -8;
-    camera.lookAt(0, 0, 0);
-    const transformationMatrix = this.state.transformationMatrix;
-    this.initVectors();
-    this.initGrid();
-    this.setState({ play: 'INIT' });
-    animationMatrix = new THREE.Matrix4();
-    stepElements = animationMatrix.elements.map(function (item, index) {
-      return (transformationMatrix.elements[index] - item) / inc;
-    });
-    t = 0;
-  };
 
   updateMatrix = (matrixElement) => {
     var newMatrix = this.state.transformationMatrix.clone();
