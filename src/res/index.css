@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'CMU Serif';
+  src: local('CMU Serif'), url(./cmunrm.ttf) format('truetype');
+}
+
+.vectorLabel {
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+  font-weight: 800;
+  font-size: 24px;
+  margin-top: -1.5em;
+}
+
+.labelRenderer {
+  position: absolute;
+  pointer-events: none;
+}
