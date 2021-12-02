@@ -6,8 +6,8 @@ import {
   Vector3,
 } from 'three';
 
-import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import Label from '../utils/label';
+import roundArray from '../utils/roundArray';
 
 const axis_reference = new Vector3(0, 1, 0);
 const stemGeometry = new CylinderGeometry(0.08, 0.08, 1, 16, 1);
@@ -20,15 +20,21 @@ export default class Vector extends Group {
     super();
 
     this.vec3 = vec3;
-    const material = new MeshBasicMaterial({ color: color });
+    const material = new MeshBasicMaterial({
+      color: color,
+    });
     const stemMesh = new Mesh(stemGeometry, material);
     const tipMesh = new Mesh(tipGeomertry, material);
 
-    this.toString = () => {
-      return '[' + this.vec3.toArray().join(' ') + ']';
+    this.toString = (vec) => {
+      return '[' + roundArray(vec.toArray()).join(' ') + ']';
     };
 
-    this.vectorLabel = new Label(color, this.toString(), 'vectorLabel');
+    this.vectorLabel = new Label(
+      color,
+      this.toString(this.vec3),
+      'vectorLabel'
+    );
     tipMesh.add(this.vectorLabel);
 
     const updateGeometry = () => {
@@ -46,7 +52,7 @@ export default class Vector extends Group {
         this.vec3.clone().normalize()
       );
 
-      this.vectorLabel.changeText(this.toString());
+      this.vectorLabel.changeText(this.toString(this.vec3));
     };
 
     updateGeometry();
@@ -61,6 +67,7 @@ export default class Vector extends Group {
         axis_reference,
         vec3Transformed.clone().normalize()
       );
+      this.vectorLabel.changeText(this.toString(vec3Transformed));
     };
 
     this.onChange = (idx, val) => {
@@ -69,6 +76,13 @@ export default class Vector extends Group {
       this.vec3 = new Vector3(...newVector);
       updateGeometry();
       return this.parent.getVectors();
+    };
+
+    this.onDelete = () => {
+      const parent = this.parent;
+      this.vectorLabel.onDelete();
+      parent.remove(this);
+      return parent.getVectors();
     };
   }
 }

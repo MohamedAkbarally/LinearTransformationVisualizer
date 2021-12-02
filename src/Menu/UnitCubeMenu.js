@@ -1,14 +1,17 @@
 import { IconButton, Stack, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
+import { SceneContext } from '../SceneContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export default function UnitCubeMenu() {
+  const scene = useContext(SceneContext);
+
   const [showUnitCube, setShowUnitCube] = useState(false);
 
   const toggleUnitCube = () => {
-    setShowUnitCube(!showUnitCube);
+    setShowUnitCube(scene.unitCube.setVisibility(!showUnitCube));
   };
   return (
     <div>

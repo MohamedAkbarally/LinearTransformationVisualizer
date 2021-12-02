@@ -14,7 +14,7 @@ export default function VectorMenu() {
   };
 
   const deleteVector = (vec) => {
-    setVectors(scene.deleteVector(vec));
+    setVectors(vec.onDelete());
   };
 
   const vectorChanged = (vec, index, value) => {

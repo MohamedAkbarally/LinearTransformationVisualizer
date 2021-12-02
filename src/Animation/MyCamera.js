@@ -1,7 +1,7 @@
 import { PerspectiveCamera, Vector3 } from 'three';
 
 const FIELD_OF_VIEW = 75;
-const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+const ASPECT_RATIO = 16 / 9;
 const NEAR = 0.1;
 const FAR = 1000;
 

@@ -14,5 +14,9 @@ export default class Label extends CSS2DObject {
     this.changeText = (text) => {
       this.div.textContent = text;
     };
+
+    this.onDelete = () => {
+      this.parent.remove(this);
+    };
   }
 }

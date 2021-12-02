@@ -1,15 +1,12 @@
-import { Matrix4, Vector2, WebGLRenderer } from 'three';
+import { Matrix4, WebGLRenderer } from 'three';
 import React, { useEffect, useRef } from 'react';
 
 import { Box } from '@mui/system';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import Menu from './Menu/Menu.js';
 import MyCamera from './Animation/MyCamera';
 import MyScene from './Animation/MyScene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { SceneContext } from './SceneContext.js';
 import TransformationMatrix from './Animation/utils/TransformationMatrix';
 
@@ -25,33 +22,10 @@ export default function App() {
   var camera = new MyCamera();
 
   var renderer = new WebGLRenderer({ antialias: true });
+
   let labelRenderer = new CSS2DRenderer();
   labelRenderer.domElement.className = 'labelRenderer';
   const controls = new OrbitControls(camera, renderer.domElement);
-  const composer = new EffectComposer(renderer);
-  const renderPass = new RenderPass(scene, camera);
-  composer.addPass(renderPass);
-  var outlinePass = new OutlinePass(
-    new Vector2(window.innerWidth, window.innerHeight),
-    scene,
-    camera,
-    []
-  );
-
-  var params = {
-    edgeStrength: 2,
-    edgeGlow: 1,
-    edgeThickness: 1.0,
-    pulsePeriod: 0,
-    usePatternTexture: false,
-  };
-
-  outlinePass.edgeStrength = params.edgeStrength;
-  outlinePass.edgeGlow = params.edgeGlow;
-  outlinePass.visibleEdgeColor.set(0xffffff);
-  outlinePass.hiddenEdgeColor.set(0xffffff);
-
-  composer.addPass(outlinePass);
 
   const transformationMatrix = new TransformationMatrix([
     1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2,
@@ -69,16 +43,12 @@ export default function App() {
 
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
-    composer.render();
   };
 
   useEffect(() => {
     rendererEl.current.appendChild(labelRenderer.domElement);
     rendererEl.current.appendChild(renderer.domElement);
     controls.domElement = rendererEl.current;
-
-    outlinePass.innerHeight = rendererEl.current.clientHeight;
-    outlinePass.innerWidth = rendererEl.current.innerWidth;
 
     renderer.setSize(
       rendererEl.current.clientWidth,
@@ -88,6 +58,7 @@ export default function App() {
       rendererEl.current.clientWidth,
       rendererEl.current.clientHeight
     );
+
     renderer.render(scene, camera);
     renderer.setClearColor(0xe8e8e8);
 
@@ -109,7 +80,10 @@ export default function App() {
         <Box sx={{ flexGrow: 1 }} style={{ height: '100vh' }}>
           <Box sx={{ display: 'flex', height: '100%' }}>
             <Box p={2} style={{ width: 450 }}>
-              <Menu intializeVectorsScene={scene.intializeVectors} />
+              <Menu
+                playAnimation={playAnimation}
+                resetAnimation={resetAnimation}
+              />
             </Box>
             <Box
               sx={{

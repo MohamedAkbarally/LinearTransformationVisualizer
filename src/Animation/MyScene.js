@@ -1,6 +1,6 @@
-import { Scene, Vector3 } from 'three';
-
 import Grid from './Mesh/Grid';
+import { Scene } from 'three';
+import UnitCube from './Mesh/UnitCube';
 import Vector from './Mesh/Vector';
 import colorIterator from './utils/colorIterator';
 import randomVector from './utils/randomVector';
@@ -9,7 +9,13 @@ export default class MyScene extends Scene {
   constructor() {
     super();
     this.colorIterator = colorIterator();
-    this.add(new Grid(3, 0.1, 0xdbdbdb), new Grid(3, 1, 0x8c8c8c));
+    this.unitCube = new UnitCube();
+
+    this.add(
+      new Grid(3, 0.1, 0xdbdbdb),
+      new Grid(3, 1, 0x8c8c8c),
+      this.unitCube
+    );
 
     this.getVectors = () => {
       return this.children
