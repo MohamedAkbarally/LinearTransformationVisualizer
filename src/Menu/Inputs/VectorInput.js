@@ -1,8 +1,8 @@
-import { Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
+import { Grid, IconButton, Stack, TextField, Typography } from "@mui/material";
 
-import { Box } from '@mui/system';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import React from 'react';
+import { Box } from "@mui/system";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import React from "react";
 
 function Input({ label, vec, index, vectorChanged }) {
   return (
@@ -13,17 +13,17 @@ function Input({ label, vec, index, vectorChanged }) {
         size="small"
         type="number"
       />
-      <Typography style={{ whiteSpace: 'nowrap' }}>{label}</Typography>
+      <Typography style={{ whiteSpace: "nowrap" }}>{label}</Typography>
     </Stack>
   );
 }
 
 export default function VectorInput({ vec, vectorChanged, deleteVector }) {
   return (
-    <Box sx={{ display: 'flex' }} m={1}>
+    <Box sx={{ display: "flex" }} m={1}>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
-          {['i +', 'j +', 'k'].map((e, i) => (
+          {["i +", "j +", "k"].map((e, i) => (
             <Grid item xs={4}>
               <Input
                 label={e}
@@ -36,8 +36,8 @@ export default function VectorInput({ vec, vectorChanged, deleteVector }) {
         </Grid>
       </Box>
       <Box style={{ paddingLeft: 10 }}>
-        <IconButton aria-label="fingerprint" color="default">
-          <DeleteOutlineIcon onClick={deleteVector} />
+        <IconButton color="default" onClick={deleteVector}>
+          <DeleteOutlineIcon />
         </IconButton>
       </Box>
     </Box>

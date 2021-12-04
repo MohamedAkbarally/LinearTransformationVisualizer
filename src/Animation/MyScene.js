@@ -1,9 +1,9 @@
-import Grid from './Mesh/Grid';
-import { Scene } from 'three';
-import UnitCube from './Mesh/UnitCube';
-import Vector from './Mesh/Vector';
-import colorIterator from './utils/colorIterator';
-import randomVector from './utils/randomVector';
+import Grid from "./Mesh/Grid";
+import { Scene } from "three";
+import UnitCube from "./Mesh/UnitCube";
+import Vector from "./Mesh/Vector";
+import colorIterator from "./utils/colorIterator";
+import randomVector from "./utils/randomVector";
 
 export default class MyScene extends Scene {
   constructor() {
@@ -34,12 +34,8 @@ export default class MyScene extends Scene {
       return this.getVectors();
     };
 
-    this.deleteVector = (vec) => {
-      this.remove(vec);
-      return this.getVectors();
-    };
-
     this.transform = (transformationMatrix) => {
+      console.log(transformationMatrix);
       this.children.forEach((obj) => obj.transform(transformationMatrix));
     };
   }

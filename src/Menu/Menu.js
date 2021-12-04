@@ -1,23 +1,9 @@
-import AnimationControlMenu from './AnimationControlMenu';
-import { Box } from '@mui/system';
-import MatrixMenu from './MatrixMenu';
-import React from 'react';
-import UnitCubeMenu from './UnitCubeMenu';
-import VectorMenu from './VectorMenu';
+import { Stack } from "@mui/material";
 
-export default function Menu({ playAnimation, resetAnimation }) {
+export default function Menu(props) {
   return (
     <div>
-      <MatrixMenu />
-      <Box sx={{ m: 2 }} />
-      <VectorMenu />
-      <Box sx={{ m: 2 }} />
-      <UnitCubeMenu />
-      <Box sx={{ m: 2 }} />
-      <AnimationControlMenu
-        playAnimation={playAnimation}
-        resetAnimation={resetAnimation}
-      />
+      <Stack spacing={2}>{props.children} </Stack>
     </div>
   );
 }

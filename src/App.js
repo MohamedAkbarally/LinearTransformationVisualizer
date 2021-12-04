@@ -1,37 +1,44 @@
-import { Matrix4, WebGLRenderer } from 'three';
-import React, { useEffect, useRef } from 'react';
+import { Matrix4, WebGLRenderer } from "three";
+import React, { useEffect, useRef } from "react";
 
-import { Box } from '@mui/system';
-import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
-import Menu from './Menu/Menu.js';
-import MyCamera from './Animation/MyCamera';
-import MyScene from './Animation/MyScene';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { SceneContext } from './SceneContext.js';
-import TransformationMatrix from './Animation/utils/TransformationMatrix';
+import { Box } from "@mui/system";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import Menu from "./Menu/Menu.js";
+import MyCamera from "./Animation/MyCamera";
+import MyScene from "./Animation/MyScene";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import TransformationMatrix from "./Animation/utils/TransformationMatrix";
+import MatrixMenu from "./Menu/MatrixMenu.js";
+import VectorMenu from "./Menu/VectorMenu.js";
+import UnitCubeMenu from "./Menu/UnitCubeMenu.js";
+import AnimationControlMenu from "./Menu/AnimationControlMenu.js";
 
 const ANIMATION_LENGTH = 100;
 const ANIMATION_STOP = -1;
 const ANIMATION_START = 0;
+
+const MENU_WIDTH = 450;
 
 export default function App() {
   const rendererEl = useRef(null);
 
   var scene = new MyScene();
   scene.addVector(1, 1, 1);
+
   var camera = new MyCamera();
 
   var renderer = new WebGLRenderer({ antialias: true });
+  renderer.setClearColor(0xe8e8e8);
 
   let labelRenderer = new CSS2DRenderer();
-  labelRenderer.domElement.className = 'labelRenderer';
+  labelRenderer.domElement.className = "labelRenderer";
+
   const controls = new OrbitControls(camera, renderer.domElement);
 
-  const transformationMatrix = new TransformationMatrix([
-    1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2,
-  ]);
+  let transformationMatrix = new TransformationMatrix();
 
   let frame = ANIMATION_STOP;
+
   const animate = () => {
     requestAnimationFrame(animate);
     controls.update();
@@ -60,8 +67,6 @@ export default function App() {
     );
 
     renderer.render(scene, camera);
-    renderer.setClearColor(0xe8e8e8);
-
     animate();
   });
 
@@ -76,32 +81,25 @@ export default function App() {
 
   return (
     <>
-      <SceneContext.Provider value={scene}>
-        <Box sx={{ flexGrow: 1 }} style={{ height: '100vh' }}>
-          <Box sx={{ display: 'flex', height: '100%' }}>
-            <Box p={2} style={{ width: 450 }}>
-              <Menu
-                playAnimation={playAnimation}
-                resetAnimation={resetAnimation}
-              />
-            </Box>
-            <Box
-              sx={{
-                flexGrow: 1,
-                height: '100%',
-                position: 'relative',
-                borderRadius: 100,
-              }}
-              p={2}
-            >
-              <div
-                ref={rendererEl}
-                style={{ height: '100%', borderRadius: 100 }}
-              />
-            </Box>
-          </Box>
+      <Box sx={{ display: "flex", height: "100vh" }}>
+        <Box style={{ width: MENU_WIDTH }} p={2}>
+          <Menu>
+            <MatrixMenu transformationMatrix={transformationMatrix} />
+            <VectorMenu
+              getVectorsInScene={scene.getVectors}
+              addVectorToScene={scene.addVector}
+            />
+            <UnitCubeMenu setSceneVisibility={scene.unitCube.setVisibility} />
+            <AnimationControlMenu
+              playAnimation={playAnimation}
+              resetAnimation={resetAnimation}
+            />
+          </Menu>
         </Box>
-      </SceneContext.Provider>
+        <Box sx={{ flexGrow: 1 }} p={2}>
+          <div ref={rendererEl} style={{ height: "100%" }} />
+        </Box>
+      </Box>
     </>
   );
 }

@@ -1,16 +1,14 @@
-import { IconButton, Stack, Typography } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import { IconButton, Stack, Typography } from "@mui/material";
+import React, { useState } from "react";
 
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import { SceneContext } from '../SceneContext';
-import VectorInput from './Inputs/VectorInput';
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import VectorInput from "./Inputs/VectorInput";
 
-export default function VectorMenu() {
-  const scene = useContext(SceneContext);
-  const [vectors, setVectors] = useState(scene.getVectors());
+export default function VectorMenu({ getVectorsInScene, addVectorToScene }) {
+  const [vectors, setVectors] = useState(getVectorsInScene());
 
   const addVector = () => {
-    setVectors(scene.addVector());
+    setVectors(addVectorToScene());
   };
 
   const deleteVector = (vec) => {
@@ -21,7 +19,7 @@ export default function VectorMenu() {
     setVectors(vec.onChange(index, value));
   };
   return (
-    <>
+    <div>
       <Stack direction="row" alignItems="center" spacing={0}>
         <Typography variant="h6" component="div">
           Vectors
@@ -39,6 +37,6 @@ export default function VectorMenu() {
           vectorChanged={vectorChanged}
         />
       ))}
-    </>
+    </div>
   );
 }

@@ -1,9 +1,10 @@
-import { Grid, Stack, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import { Grid, Stack, TextField } from "@mui/material";
+import React, { useState } from "react";
 
-import { Box } from '@mui/system';
-import LeftBracketImage from '../../res/left_bracket.svg';
-import RightBracketImage from '../../res/right_bracket.svg';
+import { Box } from "@mui/system";
+import LeftBracketImage from "../../res/left_bracket.svg";
+import RightBracketImage from "../../res/right_bracket.svg";
+import { Matrix3 } from "three";
 
 function Input({ row, col, setMatrixElemValue, matrixElemValue }) {
   return (
@@ -11,7 +12,7 @@ function Input({ row, col, setMatrixElemValue, matrixElemValue }) {
       size="small"
       type="number"
       value={matrixElemValue(row, col)}
-      onChange={(e) => setMatrixElemValue(row, col, e.target.value)}
+      onChange={(e) => setMatrixElemValue(row, col, parseInt(e.target.value))}
       InputLabelProps={{
         shrink: true,
       }}
@@ -38,17 +39,15 @@ function FormRow({ row, setMatrixElemValue, matrixElemValue }) {
   );
 }
 
-export default function MatrixInput() {
-  const [matrixValue, setMatrixValue] = useState([
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1],
-  ]);
+export default function MatrixInput({ transformationMatrix }) {
+  const [matrixValue, setMatrixValue] = useState(new Matrix3());
 
   const setMatrixElemValue = (row, col, val) => {
     let newMatrixValue = [...matrixValue];
     newMatrixValue[row][col] = val;
-    return setMatrixValue(newMatrixValue);
+    return setMatrixValue(
+      transformationMatrix.setElements(newMatrixValue.flat())
+    );
   };
 
   const matrixElemValue = (row, col) => {
