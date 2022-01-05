@@ -1,32 +1,22 @@
-import { Matrix3, Matrix4 } from "three";
+import { identity } from "lodash";
+import { Matrix3 } from "three";
 
-export default class TransformationMatrix extends Matrix4 {
+export default class TransformationMatrix {
   constructor() {
-    super();
-    let original = this.elements;
+    this.matrices = [new Matrix3()];
+    const eye = new Matrix3().toArray();
 
     this.getFrame = (frame, len) => {
-      const animationMatrix = new Matrix4();
-
-      return new Matrix4().fromArray(
-        animationMatrix.elements.map(function (item, index) {
-          return item + ((original[index] - item) / len) * frame;
-        })
+      return new Matrix3().fromArray(
+        this.matrices[0]
+          .toArray()
+          .map((e, i) => (e - eye[i]) * (frame / len) + eye[i])
       );
     };
 
-    this.getElements = () => {
-      return [
-        this.transpose().elements.slice(0, 3),
-        this.transpose().elements.slice(4, 7),
-        this.transpose().elements.slice(8, 11),
-      ];
-    };
-
-    this.setElements = (values) => {
-      this.setFromMatrix3(new Matrix3().set(...values));
-
-      return this.getElements();
+    this.updateMatrix = (idx, newMatrix) => {
+      this.matrices[idx] = newMatrix;
+      return this.matrices[idx];
     };
   }
 }

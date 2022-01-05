@@ -1,5 +1,5 @@
 import Grid from "./Mesh/Grid";
-import { Scene } from "three";
+import { Matrix4, Scene } from "three";
 import UnitCube from "./Mesh/UnitCube";
 import Vector from "./Mesh/Vector";
 import colorIterator from "./utils/colorIterator";
@@ -36,7 +36,9 @@ export default class MyScene extends Scene {
 
     this.transform = (transformationMatrix) => {
       console.log(transformationMatrix);
-      this.children.forEach((obj) => obj.transform(transformationMatrix));
+      this.children.forEach((obj) =>
+        obj.transform(new Matrix4().setFromMatrix3(transformationMatrix))
+      );
     };
   }
 }
